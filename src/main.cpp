@@ -9,59 +9,32 @@
 #include <glm/matrix.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+  
 #include "GraphicsManager.hpp"
 #include "Mesh.hpp"
 
-void draw_box() {
-    glBegin(GL_TRIANGLES);
-    glVertex3f(-0.5f, -0.5f, 0);
-    glVertex3f(-0.5f, 0.5f, 0);
-    glVertex3f(0.5f, -0.5f, 0);
-    glVertex3f(-0.5f, 0.5f, 0);
-    glVertex3f(0.5f, 0.5f, 0);
-    glVertex3f(0.5f, -0.5f, 0);
-    glEnd();
-}
+Mesh *display;
 
 void render(double current_time, GraphicsManager *gm) {
-    /** Drawing Code Goes Here! **/
+	/** Drawing Code Goes Here! **/
 
-    /** 4. Blend modes **/
-    glEnable(GL_BLEND);
-    // Alpha blending (more on this in later lectures!)
-    // Final color evaluates to [s.rgb * s.a + d.rgb * (1 - s.a)]
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glPushMatrix();
-
-    glScalef(0.5f, 0.5f, 0.5f);
-
-    glPushMatrix();
-
-    glColor4f(1.0f, 0, 0, 0.5f);
-    glTranslatef(-0.1f, -0.1f, 0);
-    draw_box();
-
-    glPopMatrix();
-
-    glColor4f(0, 0, 1.0f, 0.5f);
-    glTranslatef(0.1f, 0.1f, 0);
-    draw_box();
-
-    glPopMatrix();
-
-    glDisable(GL_BLEND);
+	/** 5. Drawing objects using Mesh.cpp **/
+	glColor4f(0.7f, 0.8f, 0.8f, 1.0f);
+	display->draw();
 }
 
-int main(int argc, char** argv) {
-    std::string title = "OpenGL Tutorial";
-    std::function<void(double, GraphicsManager*)> pass = &render;
+int main(int argc, char **argv) {
+	std::string title = "OpenGL Tutorial";
+	std::function<void(double, GraphicsManager*)> pass = &render;
 
-    GraphicsManager *gm = new GraphicsManager(title, pass);
+	const char *path = argc > 1 ? argv[1] : "../../obj/utah-teapot.obj";
 
-    gm->set_gl_version(2, 1);
-    gm->execute();
+	display = new Mesh(path);
 
-    return 0;
+	GraphicsManager *gm = new GraphicsManager(title, pass);
+
+	gm->set_gl_version(2, 1); // Set OpenGL profile to 2.1
+	gm->execute();
+
+	return 0; 
 }
