@@ -1,3 +1,7 @@
+//
+// Created by rohan on 8/15/20.
+//
+
 #include <string>
 #include <sstream>
 #include <functional>
@@ -29,7 +33,7 @@ void draw_box() {
 void render(double current_time, GraphicsManager *gm) {
     /** Drawing Code Goes Here! **/
 
-    /** 7. Same as ex6 (up to before display->draw), but with lighting and depth **/
+    /** 6. Example Model / View / Projection matrix config for scene **/
     glColor4f(0.7f, 0.8f, 0.8f, 1.0f);
     // Model matrix encodes object position
     glm::mat4 model(1.0f);
@@ -51,44 +55,7 @@ void render(double current_time, GraphicsManager *gm) {
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(glm::value_ptr(view * model));
 
-    /** Code diverges from ex6 here **/
-
-    glm::vec3 light_pos = glm::vec3(0, sinf(current_time), cosf(current_time)) * 0.17f;
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
-
-    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
-    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_specular[] = { 0, 0, 0, 1.0 };
-    GLfloat light_position[] = { light_pos.x, light_pos.y, light_pos.z, 1.0 };
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-    glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 1.0f);
-
-    glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-    glShadeModel (GL_SMOOTH);
-
-    glColor4f(0.7f, 0.8f, 0.8f, 1.0f);
     display->draw();
-    glDisable(GL_LIGHT0);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_COLOR_MATERIAL);
-
-    glPointSize(5);
-    glBegin(GL_POINTS);
-    glColor4f(1.0, 1.0, 1.0, 1.0f);
-    glVertex3f(light_pos.x, light_pos.y, light_pos.z);
-    glEnd();
-
-    glDisable(GL_DEPTH_TEST);
 }
 
 int main(int argc, char **argv) {
